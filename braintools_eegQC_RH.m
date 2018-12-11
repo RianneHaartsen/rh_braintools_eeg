@@ -15,9 +15,9 @@
 % - figure with eegQC for the whole session
 % - clean EEG data and individual ERPs
 
-
 clear 
-path_ses = strcat('/Users/riannehaartsen/Documents/02_Braintools/BrT_DATA_UK/Retest/BTA010/2018-11-24T123815');
+path_ses = strcat('/Users/riannehaartsen/Documents/02_Braintools/BrT_Arbaclofen/DATA/SP001/2018-12-10T143142');
+% load teData_retest_36_BTA011.mat d
 
 % Set up local paths to scripts
 
@@ -31,6 +31,8 @@ addpath(genpath('/Users/riannehaartsen/Documents/02_Braintools/BrT_Scripts/TaskE
 addpath(genpath('/Users/riannehaartsen/Documents/02_Braintools/BrT_Scripts/braintools_code_LM'));  
 %add RH code
 addpath('/Users/riannehaartsen/Documents/02_Braintools/BrT_Scripts/braintools_code_RH/');
+
+
 
 %%
 % Identifying paths and file information
@@ -162,50 +164,36 @@ disp('Ready for Aud ERPs')
     AudCleanData = ft_rejectvisual(cfg, AudCleanData);
 
 % Timelock analyses 
-    [AudERPs, AudN_trials] = AudERPs_timelockavg(AudCleanData, AudN_trials);
-    d.AudN_trials = AudN_trials; clear AudN_trials
+    [AudERPs, AudN_trials] = AudERPs_timelockavg_AllStim(AudCleanData, AudN_trials);
+    d.AudN_trials = AudN_trials; 
 
 % Plot individual ERPs 
 %     AudERPs_fig = AudERPs_figure(AudERPs, d.AudN_trials, d.ID, d.Session);
     
-    % ERPs with raw standard and deviant substractions
-    AudERPs_fig_MMN = AudERPs_figure_MMN(AudERPs, d.AudN_trials, d.ID, d.Session);
-
+%     % ERPs with raw standard and deviant substractions
+%     AudERPs_fig_MMN = AudERPs_figure_MMN(AudERPs, d.AudN_trials, d.ID, d.Session);
+% clear AudN_trials
 disp('Ready for Aud ERPs inspection and saving')
 
 %% Saving data for Auditory ERP task
 
-% % save the AudERPs data
-%     cd(d.Path_FieldTrip) %go to FieldTrip folder
-%     NameData = strcat('AudERPs_', d.Session,'_', d.Age, '_', d.ID, '.mat');
-%     save(NameData,'AudERPs','AudCleanData')
-%     d.Path_AudERPdata = strcat(d.Path_FieldTrip, '/', NameData);
-%     clear NameData AudERPs AudCleanData
-%        
-% % save the FastERPs figure
-%     cd(path_ses); % go to session folder
-%     NameFig = strcat('AudERPs_', d.Session,'_', d.Age, '_', d.ID, '.tif');
-%     saveas(AudERPs_fig,NameFig)
-%     clear NameFig AudERPs_fig
-    
-    
-    
-% save the AudERPs_MMN_S1 data
+% save the AudERPs_MMN_AllStim data
     cd(d.Path_FieldTrip) %go to FieldTrip folder
-    NameData = strcat('AudERPsMMN_S1sp_', d.Session,'_', d.Age, '_', d.ID, '.mat');
+    NameData = strcat('AudERPsMMN_AllStim_', d.Session,'_', d.Age, '_', d.ID, '.mat');
     save(NameData,'AudERPs','AudCleanData')
-    d.Path_AudERPdata = strcat(d.Path_FieldTrip, '/', NameData);
-    clear NameData AudERPs AudCleanData    
+    d.Path_AudERPdata_AllStim = strcat(d.Path_FieldTrip, '/', NameData);
+    clear NameData AudERPs AudCleanData     
     
-% save the AudERPs_MMN_S1 figure
-    cd(path_ses); % go to session folder
-    NameFig = strcat('AudERPs_MMN_S1sp_', d.Session,'_', d.Age, '_', d.ID, '.tif');
-    saveas(AudERPs_fig_MMN,NameFig)
-    clear NameFig AudERPs_fig    
+% % save the AudERPs_MMN_S1 figure
+%     cd(path_ses); % go to session folder
+%     NameFig = strcat('AudERPs_MMN_S1sp_', d.Session,'_', d.Age, '_', d.ID, '.tif');
+%     saveas(AudERPs_fig_MMN,NameFig)
+%     clear NameFig AudERPs_fig    
     
     
     
 % save the d variable
+    cd(path_ses)
     NameQC = strcat('teData_', d.Session,'_', d.Age, '_',d.ID, '.mat'); % interim saving eegQC data
     save(NameQC,'d')
     clear NameQC	
@@ -213,6 +201,7 @@ disp('Ready for Aud ERPs inspection and saving')
 % clear up data
     clear CleanData ERPs Tmax Tmin Trange    
     clear d channels path_ses cfg
+    clear AudN_trials
     close all
     
 disp('Data saved')

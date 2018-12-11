@@ -25,18 +25,22 @@ function [CleanData, N_trials] = AudERPs_preproc(eeglab_file, channels, Tmin, Tm
 
 % define all trials 
     cfg = [];
-    cfg.trialfun            = 'trialfun_braintools_aud_S1'; %trials -100 ms - 450 ms stimulus onset for different stimuli
+    cfg.trialfun            = 'trialfun_braintools_aud_AllStim'; %trials -100 ms - 450 ms stimulus onset for different stimuli
     cfg.dataset             = eeglab_file;
     cfg.trialdef.prestim    = .1; % s before the stimulus onset
 	cfg.trialdef.poststim   = .45; % s after the stimulus onset
     Raw_trials = ft_definetrial(cfg);
 
 % calculate N presented trials
-Stan = find(Raw_trials.trl(:,4)==400); % standard tone
+Stan1 = find(Raw_trials.trl(:,4)==400); % standard tone 1
+Stan2 = find(Raw_trials.trl(:,4)==405); % standard tone 1
+Stan3 = find(Raw_trials.trl(:,4)==406); % standard tone 1
 Dev1 = find(Raw_trials.trl(:,4)==401); % high tone
 Dev2 = find(Raw_trials.trl(:,4)==402); % low tone
 
-N_trials.Npres.Standard = length(Stan); 
+N_trials.Npres.Standard1 = length(Stan1); 
+N_trials.Npres.Standard2 = length(Stan2); 
+N_trials.Npres.Standard3 = length(Stan3); 
 N_trials.Npres.Deviant1 = length(Dev1);
 N_trials.Npres.Deviant2 = length(Dev2);
 clear Stan Dev1 Dev2
